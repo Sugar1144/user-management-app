@@ -16,7 +16,7 @@
 .table-container {
   overflow-x: auto;
   overflow-y: auto;
-  height: calc(100vh - 400px);
+  height: calc(100vh - 320px);
   margin-bottom: $spacing-lg;
   @include custom-scrollbar;
   .icon-primary {
