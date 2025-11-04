@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { User } from '../../models/user.model';
 import { ConfirmationDialog } from '../../components/confirmation-modal/confirmation-modal';
 import { UserService } from '../../services/user.service';
@@ -31,7 +31,8 @@ import { UserService } from '../../services/user.service';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss',
@@ -43,9 +44,9 @@ export class UserList implements OnInit {
   currentPage = signal<number>(0);
   itemsPerPage = signal<number>(10);
   searchTerm = signal<string>('');
-  editingRow: User | null = null;
-  editingField: string | null = null;
-  displayedColumns: string[] = [];
+  editingRow = signal<User | null>(null);
+  editingField = signal<string | null>(null);
+  displayedColumns = signal<string[]>([]);
 
   filteredUsers = computed(() => {
     const term = this.searchTerm().toLowerCase();
@@ -100,9 +101,9 @@ export class UserList implements OnInit {
     const headers = Object.keys(data[0]).filter(
       (key) => !excludedFields.includes(key) && typeof data[0][key] !== 'object'
     );
-    this.headers.set(headers);
-    this.displayedColumns = [...headers, 'actions'];
-    this.users.set(data);
+  this.headers.set(headers);
+  this.displayedColumns.set([...headers, 'actions']);
+  this.users.set(data);
   }
 
   openConfirmationModal(user: User): void {
@@ -120,7 +121,7 @@ export class UserList implements OnInit {
         this.snackBar.open('User deleted successfully', 'Close', {
           duration: 3000,
           horizontalPosition: 'end',
-          verticalPosition: 'top'
+          verticalPosition: 'bottom'
         });
       }
     });
@@ -133,8 +134,8 @@ export class UserList implements OnInit {
   }
 
   setEditing(row: User, field: string): void {
-    this.editingRow = row;
-    this.editingField = field;
+  this.editingRow.set(row);
+  this.editingField.set(field);
   }
 
   updateUser(row: User, field: string, event: any): void {
@@ -144,12 +145,12 @@ export class UserList implements OnInit {
     );
     this.users.set(updatedUsers);
     localStorage.setItem('users', JSON.stringify(updatedUsers));
-    this.clearEditing();
+  this.clearEditing();
   }
 
   clearEditing(): void {
-    this.editingRow = null;
-    this.editingField = null;
+  this.editingRow.set(null);
+  this.editingField.set(null);
   }
 
   goToDetails(user: User): void {

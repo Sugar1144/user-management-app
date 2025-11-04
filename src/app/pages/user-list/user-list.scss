@@ -15,6 +15,8 @@
 
 .table-container {
   overflow-x: auto;
+  overflow-y: auto;
+  height: calc(100vh - 400px);
   margin-bottom: $spacing-lg;
   @include custom-scrollbar;
   .icon-primary {
@@ -79,4 +81,24 @@ mat-card {
 
 mat-card-content {
   padding: $spacing-md;
+}
+@media (max-width: $breakpoint-md) {
+  .table-container {
+    height: 55vh;
+  }
+  mat-card {
+    margin: $spacing-md;
+  }
+  .search-field {
+    max-width: none;
+  }
+}
+@media (max-width: $breakpoint-sm) {
+  .table-container {
+    height: 50vh; 
+  }
+  button.mat-mdc-icon-button {
+    width: 36px;
+    height: 36px;
+  }
 }
