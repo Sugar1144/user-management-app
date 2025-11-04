@@ -1,0 +1,25 @@
+@use './variables' as vars;
+
+$font-family-primary: 'Roboto', Arial, sans-serif;
+$font-weight-regular: 400;
+$font-weight-bold: 700;
+$font-size-base: 1rem;
+$font-size-3xl: 1.875rem;
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$letter-spacing-tight: -0.05em;
+@mixin heading-2 {
+    font-family: $font-family-primary;
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    line-height: $line-height-tight;
+    letter-spacing: $letter-spacing-tight;
+    color: vars.$text-primary;
+}
+@mixin body-base {
+    font-family: $font-family-primary;
+    font-size: $font-size-base;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-normal;
+    color: vars.$text-primary;
+}

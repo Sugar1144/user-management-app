@@ -1,19 +1,22 @@
-// Theme colors
-$theme-colors: (
-  "primary": #4a90e2,
-  "secondary": #6c757d,
-  "dark": #181a20
-) !default;
-
-// Custom variables
-$body-bg: #181a20 !default;
-$body-color: #e0e0e0 !default;
-$card-bg: #1f2228 !default;
-$table-dark-bg: #1f2228 !default;
-$table-dark-color: #e0e0e0 !default;
-$table-dark-hover-bg: #2a2d36 !default;
-$navbar-dark-color: rgba(#fff, .85) !default;
-$navbar-dark-hover-color: rgba(#fff, .95) !default;
-$input-bg: #2a2d36 !default;
-$input-color: #e0e0e0 !default;
-$input-border-color: #373a43 !default;
+$white: #ffffff;
+$black: #000000;
+$gray-50: #fafafa;
+$gray-100: #f5f5f5;
+$gray-200: #eeeeee;
+$gray-400: #bdbdbd;
+$gray-500: #9e9e9e;
+$background-primary: $gray-100;
+$text-primary: rgba($black, 0.87);
+$text-secondary: rgba($black, 0.54);
+$text-disabled: rgba($black, 0.38);
+$text-hint: rgba($black, 0.26);
+$border-light: rgba($black, 0.12);
+$shadow-light: rgba($black, 0.1);
+$shadow-medium: rgba($black, 0.2);
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-xxl: 48px;
+$border-radius-sm: 4px;
+$z-index-fixed: 1030;

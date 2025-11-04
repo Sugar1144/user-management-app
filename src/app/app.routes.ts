@@ -1,8 +1,14 @@
 import { Routes } from '@angular/router';
-import { UserList } from './components/user-list/user-list';
-import { UserDetail } from './components/user-detail/user-detail';
 
 export const routes: Routes = [
-    { path: '', component: UserList },
-    { path: 'user/:id', component: UserDetail }
+    {
+        path: '',
+        loadComponent: () =>
+            import('./pages/user-list/user-list').then((m) => m.UserList),
+    },
+    {
+        path: 'user/:id',
+        loadComponent: () =>
+            import('./pages/user-detail/user-detail').then((m) => m.UserDetail),
+    },
 ];

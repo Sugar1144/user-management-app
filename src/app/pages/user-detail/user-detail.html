@@ -1,0 +1,29 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>User Details</mat-card-title>
+      <button mat-raised-button color="primary" routerLink="/">
+        <mat-icon color="primary">arrow_back</mat-icon> Back
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      @if (user()) {
+        <div class="user-info">
+          <h2>{{ user()?.name }}</h2>
+          <mat-list>
+            @for (key of objectKeys(user()!); track key) {
+              <mat-list-item>
+                <span matListItemTitle>{{ key | titlecase }}</span>
+                <span matListItemLine>{{ user()![key] }}</span>
+              </mat-list-item>
+            }
+          </mat-list>
+        </div>
+      } @else {
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

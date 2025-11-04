@@ -1,17 +1,38 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '../../models/user.model';
-import { Pagination } from '../pagination/pagination';
-import { ConfirmationModal } from '../confirmation-modal/confirmation-modal';
-import { Toast } from '../toast/toast';
+import { ConfirmationDialog } from '../../components/confirmation-modal/confirmation-modal';
 import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, Pagination, FormsModule, ConfirmationModal, Toast],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    MatCardModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule
+  ],
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss',
 })
@@ -19,14 +40,12 @@ export class UserList implements OnInit {
   users = signal<User[]>([]);
   headers = signal<string[]>([]);
   isLoading = signal<boolean>(true);
-  currentPage = signal<number>(1);
+  currentPage = signal<number>(0);
   itemsPerPage = signal<number>(10);
   searchTerm = signal<string>('');
   editingRow: User | null = null;
   editingField: string | null = null;
-  showConfirmationModal = false;
-  showToast = false;
-  userToDelete: User | null = null;
+  displayedColumns: string[] = [];
 
   filteredUsers = computed(() => {
     const term = this.searchTerm().toLowerCase();
@@ -36,12 +55,15 @@ export class UserList implements OnInit {
 
   totalItems = computed(() => this.filteredUsers().length);
   displayedUsers = computed(() => {
-    const start = (this.currentPage() - 1) * this.itemsPerPage();
+    const start = this.currentPage() * this.itemsPerPage();
     const end = start + this.itemsPerPage();
     return this.filteredUsers().slice(start, end);
   });
 
-  constructor(private router: Router, private userService: UserService) {}
+  private router = inject(Router);
+  private userService = inject(UserService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
     this.loadData();
@@ -79,25 +101,29 @@ export class UserList implements OnInit {
       (key) => !excludedFields.includes(key) && typeof data[0][key] !== 'object'
     );
     this.headers.set(headers);
+    this.displayedColumns = [...headers, 'actions'];
     this.users.set(data);
   }
 
   openConfirmationModal(user: User): void {
-    this.userToDelete = user;
-    this.showConfirmationModal = true;
-  }
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      width: '400px',
+      data: {
+        title: 'Delete User',
+        message: 'Are you sure you want to delete this user?'
+      }
+    });
 
-  onConfirmationModalClose(): void {
-    this.showConfirmationModal = false;
-    this.userToDelete = null;
-  }
-
-  onDeleteConfirm(): void {
-    if (this.userToDelete) {
-      this.deleteUser(this.userToDelete);
-      this.onConfirmationModalClose();
-      this.showToast = true;
-    }
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteUser(user);
+        this.snackBar.open('User deleted successfully', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
+      }
+    });
   }
 
   deleteUser(userToDelete: User): void {
@@ -117,6 +143,7 @@ export class UserList implements OnInit {
       user.id === row.id ? { ...user, [field]: value } : user
     );
     this.users.set(updatedUsers);
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
     this.clearEditing();
   }
 
@@ -127,19 +154,15 @@ export class UserList implements OnInit {
 
   goToDetails(user: User): void {
     const key = (user as any).id ?? (user as any).guid;
-    this.router.navigate(['/user', key]);
+  this.router.navigate(['/user', key]);
   }
 
-  onPageChange(page: number): void {
-    this.currentPage.set(page);
-  }
-
-  onItemsPerPageChange(items: number): void {
-    this.itemsPerPage.set(items);
-    this.currentPage.set(1);
+  onPageChange(event: PageEvent): void {
+    this.currentPage.set(event.pageIndex);
+    this.itemsPerPage.set(event.pageSize);
   }
 
   onSearchChange(): void {
-    this.currentPage.set(1);
+    this.currentPage.set(0);
   }
 }

@@ -1,0 +1,37 @@
+@use './variables' as vars;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+@mixin shadow-md {
+  box-shadow: 0 4px 6px vars.$shadow-light, 0 2px 4px vars.$shadow-medium;
+}
+// Scrollbar
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: vars.$gray-200;
+    border-radius: vars.$border-radius-sm;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: vars.$gray-400;
+    border-radius: vars.$border-radius-sm;
+    &:hover {
+      background: vars.$gray-500;
+    }
+  }
+}

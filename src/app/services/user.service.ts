@@ -8,9 +8,7 @@ import { User } from '../models/user.model';
 })
 export class UserService {
   private apiUrl = 'https://microsoftedge.github.io/Demos/json-dummy-data/64KB.json';
-
   constructor(private http: HttpClient) { }
-
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);
   }

@@ -1,0 +1,8 @@
+@use './variables' as vars;
+
+.mat-mdc-card {
+    margin-bottom: vars.$spacing-lg;
+}
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}

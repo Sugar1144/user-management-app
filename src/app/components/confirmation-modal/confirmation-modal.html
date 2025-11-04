@@ -1,17 +1,8 @@
-<div class="modal" tabindex="-1" [style.display]="show() ? 'block' : 'none'">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">{{ title() }}</h5>
-                <button type="button" class="btn-close" (click)="onClose()"></button>
-            </div>
-            <div class="modal-body">
-                <p>{{ message() }}</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="onClose()">No</button>
-                <button type="button" class="btn btn-danger" (click)="onConfirm()">Yes</button>
-            </div>
-        </div>
-    </div>
-</div>
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content>
+  <p>{{ data.message }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">No</button>
+  <button mat-raised-button color="warn" (click)="onYesClick()">Yes</button>
+</mat-dialog-actions>

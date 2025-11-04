@@ -1,0 +1,35 @@
+@use '../../../assets/styles/main' as *;
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: $spacing-lg;
+  mat-card {
+    margin: $spacing-lg 0;
+    mat-card-header {
+      @include flex-between;
+      margin-bottom: $spacing-lg;
+      mat-card-title {
+        margin: 0;
+      }
+    }
+    mat-card-content {
+      .user-info {
+        h2 {
+          @include heading-2;
+          margin-bottom: $spacing-lg;
+        }
+      }
+      .loading-container {
+        @include flex-center;
+        min-height: 200px;
+      }
+      mat-list-item {
+        border-bottom: 1px solid $border-light;
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}

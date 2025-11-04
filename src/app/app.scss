@@ -1,0 +1,8 @@
+@use '../assets/styles/variables' as vars;
+
+main {
+    padding-top: 64px;
+    padding-bottom: 24px;
+    min-height: 100vh;
+    background-color: vars.$background-primary;
+}
