@@ -26,15 +26,15 @@ import { User } from '../../models/user.model';
 export class UserDetail {
   user = signal<User | undefined>(undefined);
 
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  public route = inject(ActivatedRoute);
+  public router = inject(Router);
 
-  ngOnInit() {
+  public ngOnInit(): void {
     const userId = this.route.snapshot.paramMap.get('id');
     const localUsers = localStorage.getItem('users');
     if (localUsers) {
-      const users = JSON.parse(localUsers);
-      const foundUser = users.find((user: User) => user.id === userId || (user as any).guid === userId);
+      const users: User[] = JSON.parse(localUsers);
+      const foundUser = users.find((u) => u.id === userId);
       if (!foundUser) {
         this.router.navigate(['/']);
       } else {
@@ -44,7 +44,7 @@ export class UserDetail {
       this.router.navigate(['/']);
     }
   }
-  objectKeys(obj: any): string[] {
+  public objectKeys(obj: Record<string, unknown>): string[] {
     return Object.keys(obj);
   }
 }

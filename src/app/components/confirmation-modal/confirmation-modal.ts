@@ -15,12 +15,12 @@ export interface DialogData {
   styleUrl: './confirmation-modal.scss',
 })
 export class ConfirmationDialog {
-  dialogRef = inject(MatDialogRef<ConfirmationDialog>);
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
-  onNoClick(): void {
+  public dialogRef = inject(MatDialogRef<ConfirmationDialog>);
+  public constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+  public onNoClick(): void {
     this.dialogRef.close(false);
   }
-  onYesClick(): void {
+  public onYesClick(): void {
     this.dialogRef.close(true);
   }
 }

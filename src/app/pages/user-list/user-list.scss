@@ -1,104 +1,97 @@
 @use '../../../assets/styles/main' as *;
 
-.header-flex {
-  @include flex-between;
-  flex-wrap: wrap;
-  width: 100%;
-
-  .search-field {
-    min-width: 250px;
-    max-width: 400px;
-    width: 100%;
-  }
-
-}
-
-.table-container {
-  overflow-x: auto;
-  overflow-y: auto;
-  height: calc(100vh - 320px);
-  margin-bottom: $spacing-lg;
-  @include custom-scrollbar;
-  .icon-primary {
-    color: var(--mdc-theme-primary, #1976d2);
-    transition: color 0.2s ease;
-  }
-
-  .icon-warn {
-    color: var(--mdc-theme-error, #d32f2f);
-    transition: color 0.2s ease;
-  }
-  button.mat-mdc-icon-button:hover {
-    .icon-primary {
-      color: #0d47a1;
-    }
-
-    .icon-warn {
-      color: #b71c1c;
-    }
-  }
-}
-
-.loading-container {
-  @include flex-center;
-  min-height: 300px;
-}
-
-.no-data {
-  @include flex-column;
-  align-items: center;
-  justify-content: center;
-  padding: $spacing-xxl;
-  text-align: center;
-
-  mat-icon {
-    font-size: 64px;
-    width: 64px;
-    height: 64px;
-    color: $text-hint;
-    margin-bottom: $spacing-md;
-  }
-
-  p {
-    @include body-base;
-    color: $text-secondary;
-    margin: 0;
-  }
-}
-
-.edit-field {
-  margin: 0;
-  width: 100%;
-
-  ::ng-deep .mat-mdc-form-field-infix {
-    padding: $spacing-sm 0;
-  }
-}
-
 mat-card {
   margin: $spacing-lg;
-}
-
-mat-card-content {
-  padding: $spacing-md;
+  mat-card-header {
+    @include flex-between;
+    flex-wrap: wrap;
+    width: 100%;
+    .search-field {
+      min-width: 250px;
+      max-width: 400px;
+      width: 100%;
+    }
+  }
+  mat-card-content {
+    padding: $spacing-md;
+    .loading-container {
+      @include flex-center;
+      min-height: 300px;
+    }
+    .table-container {
+      overflow-x: auto;
+      overflow-y: auto;
+      height: calc(100vh - 320px);
+      margin-bottom: $spacing-lg;
+      @include custom-scrollbar;
+      .icon-primary {
+        color: var(--mdc-theme-primary, #1976d2);
+        transition: color 0.2s ease;
+      }
+      .icon-warn {
+        color: var(--mdc-theme-error, #d32f2f);
+        transition: color 0.2s ease;
+      }
+      button.mat-mdc-icon-button:hover {
+        .icon-primary {
+          color: #0d47a1;
+        }
+        .icon-warn {
+          color: #b71c1c;
+        }
+      }
+    }
+    .no-data {
+      @include flex-column;
+      align-items: center;
+      justify-content: center;
+      padding: $spacing-xxl;
+      text-align: center;
+      mat-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        color: $text-hint;
+        margin-bottom: $spacing-md;
+      }
+      p {
+        @include body-base;
+        color: $text-secondary;
+        margin: 0;
+      }
+    }
+    .edit-field {
+      margin: 0;
+      width: 100%;
+      ::ng-deep .mat-mdc-form-field-infix {
+        padding: $spacing-sm 0;
+      }
+    }
+  }
 }
 @media (max-width: $breakpoint-md) {
-  .table-container {
-    height: 55vh;
-  }
   mat-card {
     margin: $spacing-md;
-  }
-  .search-field {
-    max-width: none;
+    mat-card-content {
+      .table-container {
+        height: 55vh;
+      }
+      .search-field {
+        max-width: none;
+      }
+    }
   }
 }
 @media (max-width: $breakpoint-sm) {
-  .table-container {
-    height: 50vh; 
-  }
-  button.mat-mdc-icon-button {
-    width: 36px;
-    height: 36px;
+  mat-card {
+    mat-card-content {
+      .table-container {
+        height: 50vh;
+      }
+      button.mat-mdc-icon-button {
+        width: 36px;
+        height: 36px;
+      }
+    }
   }
 }

@@ -4,5 +4,5 @@ export interface User {
   id: string;
   bio: string;
   version: number;
-  [key: string]: any;
+  [key: string]: string | number;
 }

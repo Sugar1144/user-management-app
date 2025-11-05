@@ -61,16 +61,16 @@ export class UserList implements OnInit {
     return this.filteredUsers().slice(start, end);
   });
 
-  private router = inject(Router);
-  private userService = inject(UserService);
-  private dialog = inject(MatDialog);
-  private snackBar = inject(MatSnackBar);
+  public router = inject(Router);
+  public userService = inject(UserService);
+  public dialog = inject(MatDialog);
+  public snackBar = inject(MatSnackBar);
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.loadData();
   }
 
-  loadData(): void {
+  public loadData(): void {
     this.isLoading.set(true);
     const localUsers = localStorage.getItem('users');
 
@@ -106,7 +106,7 @@ export class UserList implements OnInit {
   this.users.set(data);
   }
 
-  openConfirmationModal(user: User): void {
+  public openConfirmationModal(user: User): void {
     const dialogRef = this.dialog.open(ConfirmationDialog, {
       width: '400px',
       data: {
@@ -127,19 +127,20 @@ export class UserList implements OnInit {
     });
   }
 
-  deleteUser(userToDelete: User): void {
+  public deleteUser(userToDelete: User): void {
     const updatedUsers = this.users().filter((user) => user.id !== userToDelete.id);
     this.users.set(updatedUsers);
     localStorage.setItem('users', JSON.stringify(updatedUsers));
   }
 
-  setEditing(row: User, field: string): void {
+  public setEditing(row: User, field: string): void {
   this.editingRow.set(row);
   this.editingField.set(field);
   }
 
-  updateUser(row: User, field: string, event: any): void {
-    const value = event.target.value;
+  public updateUser(row: User, field: string, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
     const updatedUsers = this.users().map((user) =>
       user.id === row.id ? { ...user, [field]: value } : user
     );
@@ -148,22 +149,22 @@ export class UserList implements OnInit {
   this.clearEditing();
   }
 
-  clearEditing(): void {
+  public clearEditing(): void {
   this.editingRow.set(null);
   this.editingField.set(null);
   }
 
-  goToDetails(user: User): void {
-    const key = (user as any).id ?? (user as any).guid;
+  public goToDetails(user: User): void {
+    const key = user.id;
   this.router.navigate(['/user', key]);
   }
 
-  onPageChange(event: PageEvent): void {
+  public onPageChange(event: PageEvent): void {
     this.currentPage.set(event.pageIndex);
     this.itemsPerPage.set(event.pageSize);
   }
 
-  onSearchChange(): void {
+  public onSearchChange(): void {
     this.currentPage.set(0);
   }
 }
