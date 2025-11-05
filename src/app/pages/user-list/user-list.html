@@ -2,8 +2,8 @@
   <mat-card-header class="header-flex">
     <mat-card-title>User List</mat-card-title>
     <mat-form-field class="search-field" appearance="outline">
-  <mat-label>Search by name</mat-label>
-  <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event); onSearchChange()" placeholder="Search...">
+      <mat-label>Search by name</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" placeholder="Search...">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
   </mat-card-header>

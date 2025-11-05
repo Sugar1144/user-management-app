@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { User } from '../../models/user.model';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -24,16 +25,20 @@ import { User } from '../../models/user.model';
   styleUrl: './user-detail.scss',
 })
 export class UserDetail {
-  user = signal<User | undefined>(undefined);
+  protected user = signal<User | undefined>(undefined);
 
-  public route = inject(ActivatedRoute);
-  public router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private userService = inject(UserService);
 
   public ngOnInit(): void {
+    this.setUserDetail();
+  }
+
+  private setUserDetail(): void {
     const userId = this.route.snapshot.paramMap.get('id');
-    const localUsers = localStorage.getItem('users');
-    if (localUsers) {
-      const users: User[] = JSON.parse(localUsers);
+    const users = this.userService.getCachedUsers();
+    if (users && users.length > 0) {
       const foundUser = users.find((u) => u.id === userId);
       if (!foundUser) {
         this.router.navigate(['/']);
@@ -44,7 +49,8 @@ export class UserDetail {
       this.router.navigate(['/']);
     }
   }
-  public objectKeys(obj: Record<string, unknown>): string[] {
+
+  public objectKeys(obj: Record<string, number | string>): string[] {
     return Object.keys(obj);
   }
 }

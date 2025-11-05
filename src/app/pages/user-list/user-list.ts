@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, model } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -38,33 +38,33 @@ import { UserService } from '../../services/user.service';
   styleUrl: './user-list.scss',
 })
 export class UserList implements OnInit {
-  users = signal<User[]>([]);
-  headers = signal<string[]>([]);
-  isLoading = signal<boolean>(true);
-  currentPage = signal<number>(0);
-  itemsPerPage = signal<number>(10);
-  searchTerm = signal<string>('');
-  editingRow = signal<User | null>(null);
-  editingField = signal<string | null>(null);
-  displayedColumns = signal<string[]>([]);
+  protected users = signal<User[]>([]);
+  protected headers = signal<string[]>([]);
+  protected isLoading = signal<boolean>(true);
+  protected currentPage = signal<number>(0);
+  protected itemsPerPage = signal<number>(10);
+  public searchTerm = model<string>('');
+  protected editingRow = signal<User | null>(null);
+  protected editingField = signal<string | null>(null);
+  protected displayedColumns = signal<string[]>(['name', 'language', 'id', 'bio', 'version', 'actions']);
 
-  filteredUsers = computed(() => {
+  protected filteredUsers = computed(() => {
     const term = this.searchTerm().toLowerCase();
     if (!term) return this.users();
     return this.users().filter((user) => user.name.toLowerCase().includes(term));
   });
 
-  totalItems = computed(() => this.filteredUsers().length);
-  displayedUsers = computed(() => {
+  protected totalItems = computed(() => this.filteredUsers().length);
+  protected displayedUsers = computed(() => {
     const start = this.currentPage() * this.itemsPerPage();
     const end = start + this.itemsPerPage();
     return this.filteredUsers().slice(start, end);
   });
 
-  public router = inject(Router);
-  public userService = inject(UserService);
-  public dialog = inject(MatDialog);
-  public snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+  private userService = inject(UserService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
 
   public ngOnInit(): void {
     this.loadData();
@@ -72,18 +72,15 @@ export class UserList implements OnInit {
 
   public loadData(): void {
     this.isLoading.set(true);
-    const localUsers = localStorage.getItem('users');
+    const cachedUsers = this.userService.getCachedUsers();
 
-    if (localUsers) {
-      const data = JSON.parse(localUsers);
-      this.setUserData(data);
+    if (cachedUsers && cachedUsers.length > 0) {
+      this.setUserData(cachedUsers);
       this.isLoading.set(false);
     } else {
       this.userService.getUsers().subscribe({
         next: (data) => {
           if (data && data.length > 0) {
-            this.users.set(data);
-            localStorage.setItem('users', JSON.stringify(data));
             this.setUserData(data);
           }
           this.isLoading.set(false);
@@ -97,13 +94,8 @@ export class UserList implements OnInit {
   }
 
   private setUserData(data: User[]): void {
-    const excludedFields = ['tags', 'friends'];
-    const headers = Object.keys(data[0]).filter(
-      (key) => !excludedFields.includes(key) && typeof data[0][key] !== 'object'
-    );
-  this.headers.set(headers);
-  this.displayedColumns.set([...headers, 'actions']);
-  this.users.set(data);
+    this.headers.set(['name', 'language', 'id', 'bio', 'version']);
+    this.users.set(data);
   }
 
   public openConfirmationModal(user: User): void {
@@ -128,9 +120,9 @@ export class UserList implements OnInit {
   }
 
   public deleteUser(userToDelete: User): void {
-    const updatedUsers = this.users().filter((user) => user.id !== userToDelete.id);
+    this.userService.deleteUser(userToDelete.id);
+    const updatedUsers = this.userService.getCachedUsers();
     this.users.set(updatedUsers);
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
   }
 
   public setEditing(row: User, field: string): void {
@@ -141,12 +133,11 @@ export class UserList implements OnInit {
   public updateUser(row: User, field: string, event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-    const updatedUsers = this.users().map((user) =>
-      user.id === row.id ? { ...user, [field]: value } : user
-    );
+    const updatedUser = { ...row, [field]: value };
+    this.userService.updateUser(updatedUser);
+    const updatedUsers = this.userService.getCachedUsers();
     this.users.set(updatedUsers);
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
-  this.clearEditing();
+    this.clearEditing();
   }
 
   public clearEditing(): void {
